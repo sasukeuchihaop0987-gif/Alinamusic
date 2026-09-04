@@ -78,7 +78,7 @@ STRING2 = getenv("STRING_SESSION2", none)
 STRING3 = getenv("STRING_SESSION3", none) 
 STRING4 = getenv("STRING_SESSION4", none) 
 STRING5 = getenv("STRING_SESSION5", none) 
-STRING6 = getenv("STRING_SESSTION6" none) 
+STRING6 = getenv("STRING_SESSTION6",none) 
 STRING7 = getenv("STRING_SESSION7", none) 
 
 # Miscellaneous
