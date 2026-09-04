@@ -1,6 +1,7 @@
+git+https://github.com/yt-dlp/yt-dlp.git
+curl-cffi
 pyrogram==2.0.106
 pytgcalls==1.2.1
-git+https://github.com/yt-dlp/yt-dlp.git
 motor
 pymongo
 dnspython
@@ -11,3 +12,4 @@ requests
 pillow
 psutil
 speedtest-cli
+ 
