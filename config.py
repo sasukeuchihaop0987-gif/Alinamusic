@@ -29,7 +29,7 @@ BOT_TOKEN = getenv("BOT_TOKEN", "8886382041:AAEResgsDB0B7Kn8VUyfYB9OPkYHjhQXAVo"
 # Bot and owner info
 OWNER_USERNAME = getenv("OWNER_USERNAME", "@sasuke_qt")
 BOT_USERNAME = getenv("BOT_USERNAME", "@Mikasax_music_robot")
-BOT_NAME = getenv("BOT_NAME", "Miksa")
+BOT_NAME = getenv("BOT_NAME", "𝐌ɪᴋᴀsᴀ  ꭙ 𝐌ᴜꜱɪᴄ ♪˼")
 ASSUSERNAME = getenv("ASSUSERNAME", "@sasuke_qt")
 
 # MongoDB
