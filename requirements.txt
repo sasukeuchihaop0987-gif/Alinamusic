@@ -1,7 +1,6 @@
 pyrogram==2.0.106
-pytorch-lightning
-pytgcalls>=1.2.0
-yt-dlp>=2024.08.06
+pytgcalls==1.2.1
+git+https://github.com/yt-dlp/yt-dlp.git
 motor
 pymongo
 dnspython
