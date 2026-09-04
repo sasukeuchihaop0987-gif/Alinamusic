@@ -11,4 +11,5 @@ aiohttp
 requests
 pillow
 psutil
-speedtest-cli 
+speedtest-cli
+
