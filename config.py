@@ -33,8 +33,9 @@ BOT_NAME = getenv("BOT_NAME", "Miksa")
 ASSUSERNAME = getenv("ASSUSERNAME", "@sasuke_qt")
 
 # MongoDB
-MONGO_DB_URI = getenv("MONGO_DB_URI", "mongodb+srv://Sasukeuchihabhai:SASUKEUCHIHA90@cluster0.gv7hurv.mongodb.net/?appName=Cluster0
-")
+MONGO_DB_URI = getenv("MONGO_DB_URI", "mongodb+srv://Sasukeuchihabhai:SASUKEUCHIHA90@cluster0.gv7hurv.mongodb.net/?appName=Cluster0")
+ 
+
 
 # Limits and IDs
 DURATION_LIMIT_MIN = int(getenv("DURATION_LIMIT", 17000))
