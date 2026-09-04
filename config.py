@@ -23,7 +23,7 @@ load_dotenv()
 # Required credentials
 API_ID = int(getenv("API_ID", "25925015"))
 API_HASH = getenv("API_HASH", "99af56682a46f5a665ab5c6cf5471722")
-BOT_TOKEN = getenv("BOT_TOKEN", "8886382041:AAEResgsDB0B7Kn8VUyfYB9OPkYHjhQXAVo")
+BOT_TOKEN = getenv("BOT_TOKEN", "8886382041:AAFkMdsrmpVZOL9WAEFQjpWkdvJ9D2je2yQ")
 
 
 # Bot and owner info
