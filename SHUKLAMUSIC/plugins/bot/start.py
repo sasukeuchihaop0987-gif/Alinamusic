@@ -97,10 +97,43 @@ async def start_pm(client, message: Message, _):
         served_chats = len(await get_served_chats())
         served_users = len(await get_served_users())
         UP, CPU, RAM, DISK = await bot_sys_stats()
+        welcome_text = f"""🦋 ʜєʏ {message.from_user.mention} 🦋
+
+🦋 ᴡєʟᴄσϻє ᴛσ {app.mention}
+ᴘʀєϻɪᴜϻ | ᴀᴅ-ғʀєє | ᴜʟᴛʀᴧ ꜱϻσσᴛʜ
+
+🦋 ʜɪɢʜ-ǫᴜᴧʟɪᴛʏ ᴍᴜꜱɪᴄ ᴘʟᴧʏєʀ ʙσᴛ
+ғσʀ ᴛєʟєɢʀᴧϻ ɢʀσᴜᴘꜱ & ᴄʜᴧηηєʟꜱ
+
+🦋 ɪηꜱᴛᴧηᴛ ꜱᴛʀєᴧϻɪηɢ
+🦋 ꜱϻσσᴛʜ ᴘʟᴧʏʙᴧᴄᴋ
+🦋 ᴄʀʏꜱᴛᴧʟ ꜱσᴜηᴅ | ησ ʟᴧɢ
+
+🦋 ᴛᴧᴘ ʜєʟᴘ ғσʀ ᴄσϻϻᴧηᴅꜱ
+
+•── ⋅ ⋅ ────── ⋅᯽⋅ ────── ⋅ ⋅ ──•"""
+
+        welcome_keyboard = InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        "🦋 ʜєʟᴘ",
+                        callback_data="help_callback"
+                    ),
+                ],
+                [
+                    InlineKeyboardButton(
+                        "𝛅 ᥲ s 𝛖 𝛋 ᴇ ࿐",
+                        url="https://t.me/sasuke_qt"
+                    ),
+                ],
+            ]
+        )
+
         await message.reply_photo(
             START_IMG_URL,
-            caption=_["start_2"].format(message.from_user.mention, app.mention, UP, DISK, CPU, RAM, served_users, served_chats),
-            reply_markup=InlineKeyboardMarkup(out),
+            caption=welcome_text,
+            reply_markup=welcome_keyboard,
             message_effect_id=random.choice(EFFECT_IDS),
         )
         if await is_on_off(2):
@@ -165,4 +198,4 @@ async def welcome(client, message: Message):
                 await add_served_chat(message.chat.id)
                 await message.stop_propagation()
         except Exception as ex:
-            print(ex)
+            print(ex) 
