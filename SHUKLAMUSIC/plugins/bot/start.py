@@ -1,123 +1,201 @@
+# -----------------------------------------------
+# 🔸 StrangerMusic Project
+# -----------------------------------------------
 import asyncio
+import random
+import time
 from pyrogram import filters
 from pyrogram.enums import ChatType
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
- 
+from py_yt import VideosSearch
+import config
+from SHUKLAMUSIC import app
+from SHUKLAMUSIC.misc import _boot_
+from SHUKLAMUSIC.plugins.sudo.sudoers import sudoers_list
+from SHUKLAMUSIC.utils import bot_sys_stats
+from SHUKLAMUSIC.utils.database import (
+    add_served_chat,
+    add_served_user,
+    blacklisted_chats,
+    get_lang,
+    get_served_chats,
+    get_served_users,
+    is_banned_user,
+    is_on_off,
+)
+from SHUKLAMUSIC.utils.decorators.language import LanguageStart
+from SHUKLAMUSIC.utils.formatters import get_readable_time
+from SHUKLAMUSIC.utils.inline import help_pannel, private_panel, start_panel
+from strings import get_string
+from config import BANNED_USERS, START_IMG_URL
 
-        # ==============================
-        # PREMIUM EMOJI IDs
-        # ==============================
-        PREMIUM_EMOJIS = {
-            "sasuke": 6219943402952204798,
-            "one": 5935970344413172236,
-            "two": 5260567255145539253,
-            "three": 6314331120372552664,
-            "four": 4938201020091073754,
-        }
+EFFECT_IDS = [
+    5046509860389126442,
+    5107584321108051014,
+    5104841245755180586,
+    5159385139981059251,
+]
 
-        async def custom_emoji(emoji_id, fallback):
-            try:
-                stickers = await app.get_custom_emoji_stickers([emoji_id])
+@app.on_message(filters.command(["start"]) & filters.private & ~BANNED_USERS)
+@LanguageStart
+async def start_pm(client, message: Message, _):
+    await add_served_user(message.from_user.id)
 
-                if stickers and stickers[0].emoji:
-                    return (
-                        f'<emoji id="{emoji_id}">'
-                        f'{stickers[0].emoji}'
-                        f'</emoji>'
-                    )
+    if len(message.text.split()) > 1:
+        name = message.text.split(None, 1)[1]
 
-            except Exception as ex:
-                print(
-                    f"Custom emoji {emoji_id} unavailable: {ex}"
+        if name.startswith("help"):
+            keyboard = help_pannel(_)
+            await message.reply_photo(
+                START_IMG_URL,
+                caption=_['help_1'].format(config.SUPPORT_CHAT),
+                reply_markup=keyboard,
+                message_effect_id=random.choice(EFFECT_IDS),
+            )
+        elif name.startswith("sud"):
+            await sudoers_list(client=client, message=message, _=_)
+            if await is_on_off(2):
+                await app.send_message(
+                    chat_id=config.LOGGER_ID,
+                    text=f"❖ {message.from_user.mention} ᴊᴜsᴛ sᴛᴀʀᴛᴇᴅ ᴛʜᴇ ʙᴏᴛ ᴛᴏ ᴄʜᴇᴄᴋ <b>sᴜᴅᴏʟɪsᴛ</b>.\n\n<b>๏ ᴜsᴇʀ ɪᴅ :</b> <code>{message.from_user.id}</code>\n<b>๏ ᴜsᴇʀɴᴀᴍᴇ :</b> @{message.from_user.username}",
                 )
+        elif name.startswith("inf"):
+            query = name.replace("info_", "", 1)
+            results = VideosSearch(query, limit=1)
 
-            return fallback
+            for result in (await results.next())["result"]:
+                title = result["title"]
+                duration = result["duration"]
+                views = result["viewCount"]["short"]
+                thumbnail = result["thumbnails"][0]["url"].split("?")[0]
+                channellink = result["channel"]["link"]
+                channel = result["channel"]["name"]
+                link = result["link"]
+                published = result["publishedTime"]
 
-        # Get Premium Custom Emojis
-        emoji_1 = await custom_emoji(
-            PREMIUM_EMOJIS["one"], "🦋"
-        )
+            searched_text = _["start_6"].format(title, duration, views, published, channellink, channel, app.mention)
+            key = InlineKeyboardMarkup([
+                [
+                    InlineKeyboardButton(text=_["S_B_8"], url=link),
+                    InlineKeyboardButton(text=_["S_B_9"], url=config.SUPPORT_CHAT),
+                ],
+            ])
+            await app.send_photo(
+                chat_id=message.chat.id,
+                photo=thumbnail,
+                caption=searched_text,
+                reply_markup=key,
+                message_effect_id=random.choice(EFFECT_IDS),
+            )
+            if await is_on_off(2):
+                await app.send_message(
+                    chat_id=config.LOGGER_ID,
+                    text=f"❖ {message.from_user.mention} ᴊᴜsᴛ sᴛᴀʀᴛᴇᴅ ᴛʜᴇ ʙᴏᴛ ᴛᴏ ᴄʜᴇᴄᴋ <b>ᴛʀᴀᴄᴋ ɪɴғᴏʀᴍᴀᴛɪᴏɴ</b>.\n\n<b>๏ ᴜsᴇʀ ɪᴅ :</b> <code>{message.from_user.id}</code>\n<b>๏ ᴜsᴇʀɴᴀᴍᴇ :</b> @{message.from_user.username}",
+                )
+    else:
+        out = private_panel(_)
+        served_chats = len(await get_served_chats())
+        served_users = len(await get_served_users())
+        UP, CPU, RAM, DISK = await bot_sys_stats()
+        welcome_text = f"""🦋 ʜєʏ {message.from_user.mention} 🦋
 
-        emoji_2 = await custom_emoji(
-            PREMIUM_EMOJIS["two"], "🦋"
-        )
-
-        emoji_3 = await custom_emoji(
-            PREMIUM_EMOJIS["three"], "🦋"
-        )
-
-        emoji_4 = await custom_emoji(
-            PREMIUM_EMOJIS["four"], "🦋"
-        )
-
-        sasuke_emoji = await custom_emoji(
-            PREMIUM_EMOJIS["sasuke"], "👤"
-        )
-
-        # ==============================
-        # WELCOME MESSAGE
-        # ==============================
-        welcome_text = f"""
-<blockquote>
-{emoji_1} ʜєʏ {message.from_user.mention} {emoji_1}
-
-{emoji_2} ᴡєʟᴄσϻє ᴛσ {app.mention} ♫ ✨
+🦋 ᴡєʟᴄσϻє ᴛσ {app.mention}
 ᴘʀєϻɪᴜϻ | ᴀᴅ-ғʀєє | ᴜʟᴛʀᴧ ꜱϻσσᴛʜ
 
-{emoji_3} ʜɪɢʜ-ǫᴜᴧʟɪᴛʏ ᴍᴜꜱɪᴄ ᴘʟᴧʏєʀ ʙσᴛ
+🦋 ʜɪɢʜ-ǫᴜᴧʟɪᴛʏ ᴍᴜꜱɪᴄ ᴘʟᴧʏєʀ ʙσᴛ
 ғσʀ ᴛєʟєɢʀᴧϻ ɢʀσᴜᴘꜱ & ᴄʜᴧηηєʟꜱ
 
-{emoji_4} ɪηꜱᴛᴧηᴛ ꜱᴛʀєᴧϻɪηɢ
-{emoji_4} ꜱϻσσᴛʜ ᴘʟᴧʏʙᴧᴄᴋ
-{emoji_4} ᴄʀʏꜱᴛᴧʟ ꜱσᴜηᴅ | ησ ʟᴧɢ
+🦋 ɪηꜱᴛᴧηᴛ ꜱᴛʀєᴧϻɪηɢ
+🦋 ꜱϻσσᴛʜ ᴘʟᴧʏʙᴧᴄᴋ
+🦋 ᴄʀʏꜱᴛᴧʟ ꜱσᴜηᴅ | ησ ʟᴧɢ
 
-{emoji_1} ᴛᴧᴘ ʜєʟᴘ ғσʀ ᴄσϻϻᴧηᴅꜱ
+🦋 ᴛᴧᴘ ʜєʟᴘ ғσʀ ᴄσϻϻᴧηᴅꜱ
 
-•── ⋅ ⋅ ────── ⋅᯽⋅ ────── ⋅ ⋅ ──•
+•── ⋅ ⋅ ────── ⋅᯽⋅ ────── ⋅ ⋅ ──•"""
 
-<a href="https://t.me/sasuke_qt">
-{sasuke_emoji} ᴘσᴡєʀєᴅ ʙʏ : 𝛅 ᥲ s 𝛖 𝛋 ᴇ ࿐
-</a>
-</blockquote>
-"""
-
-        # ==============================
-        # HELP BUTTON
-        # ==============================
         welcome_keyboard = InlineKeyboardMarkup(
             [
                 [
                     InlineKeyboardButton(
                         "🦋 ʜєʟᴘ",
-                        url=f"https://t.me/{app.username}?start=help",
-                    )
-                ]
+                        callback_data="help_callback"
+                    ),
+                ],
+                [
+                    InlineKeyboardButton(
+                        "𝛅 ᥲ s 𝛖 𝛋 ᴇ ࿐",
+                        url="https://t.me/sasuke_qt"
+                    ),
+                ],
             ]
         )
 
-        # ==============================
-        # SEND WELCOME
-        # ==============================
         await message.reply_photo(
             START_IMG_URL,
             caption=welcome_text,
-            parse_mode="html",
             reply_markup=welcome_keyboard,
             message_effect_id=random.choice(EFFECT_IDS),
         )
-
-        # ==============================
-        # LOGGING
-        # ==============================
         if await is_on_off(2):
             await app.send_message(
                 chat_id=config.LOGGER_ID,
-                text=(
-                    f"❖ {message.from_user.mention} "
-                    f"ᴊᴜꜱᴛ ꜱᴛᴀʀᴛᴇᴅ ᴛʜᴇ ʙᴏᴛ.\n\n"
-                    f"<b>๏ ᴜꜱᴇʀ ɪᴅ :</b> "
-                    f"<code>{message.from_user.id}</code>\n"
-                    f"<b>๏ ᴜꜱᴇʀɴᴀᴍᴇ :</b> "
-                    f"@{message.from_user.username}"
-                ),
+                text=f"❖ {message.from_user.mention} ᴊᴜsᴛ sᴛᴀʀᴛᴇ丁 ᴛʜᴇ ʙᴏᴛ.\n\n<b>๏ ᴜsᴇʀ ɪᴅ :</b> <code>{message.from_user.id}</code>\n<b>๏ ᴜsᴇʀɴᴀᴍᴇ :</b> @{message.from_user.username}",
             )
+
+@app.on_message(filters.command(["start"]) & filters.group & ~BANNED_USERS)
+@LanguageStart
+async def start_gp(client, message: Message, _):
+    out = start_panel(_)
+    uptime = int(time.time() - _boot_)
+    await message.reply_photo(
+        START_IMG_URL,
+        caption=_["start_1"].format(app.mention, get_readable_time(uptime)),
+        reply_markup=InlineKeyboardMarkup(out),
+    )
+    return await add_served_chat(message.chat.id)
+
+@app.on_message(filters.new_chat_members, group=-1)
+async def welcome(client, message: Message):
+    for member in message.new_chat_members:
+        try:
+            language = await get_lang(message.chat.id)
+            _ = get_string(language)
+
+            if await is_banned_user(member.id):
+                try:
+                    await message.chat.ban_member(member.id)
+                except:
+                    pass
+
+            if member.id == app.id:
+                if message.chat.type != ChatType.SUPERGROUP:
+                    await message.reply_text(_["start_4"])
+                    return await app.leave_chat(message.chat.id)
+
+                if message.chat.id in await blacklisted_chats():
+                    await message.reply_text(
+                        _["start_5"].format(
+                            app.mention,
+                            f"https://t.me/{app.username}?start=sudolist",
+                            config.SUPPORT_CHAT,
+                        ),
+                        disable_web_page_preview=True,
+                    )
+                    return await app.leave_chat(message.chat.id)
+
+                out = start_panel(_)
+                await message.reply_photo(
+                    START_IMG_URL,
+                    caption=_["start_3"].format(
+                        message.from_user.mention,
+                        app.mention,
+                        message.chat.title,
+                        app.mention,
+                    ),
+                    reply_markup=InlineKeyboardMarkup(out),
+                    message_effect_id=random.choice(EFFECT_IDS),
+                )
+                await add_served_chat(message.chat.id)
+                await message.stop_propagation()
+        except Exception as ex:
+            print(ex)
