@@ -1,6 +1,6 @@
 git+https://github.com/yt-dlp/yt-dlp.git
 curl-cffi
-pyrogram==2.0.106
+pyrofork
 pytgcalls==0.8.0
 motor
 pymongo
@@ -12,4 +12,3 @@ requests
 pillow
 psutil
 speedtest-cli
-pyrofork
