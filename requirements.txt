@@ -12,3 +12,4 @@ requests
 pillow
 psutil
 speedtest-cli
+pyrofork
