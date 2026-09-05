@@ -183,7 +183,7 @@ async def start_pm(client, message: Message, _):
         if name[0:4] == "help":
             keyboard = help_pannel(_)
             await message.reply_video(
-                "https://files.catbox.moe/0lz6ue.mp4",
+                "https://n.uguu.se/DlpFAoxS.jpg",
                 caption=_["help_1"].format(config.SUPPORT_CHAT),
                 reply_markup=keyboard,
             )
@@ -267,7 +267,7 @@ async def start_pm(client, message: Message, _):
         )
 
         await message.reply_video(
-            "https://files.catbox.moe/0lz6ue.mp4",
+            "https://files.catbox.moe/8i51wn.mp4",
             caption=final_caption,
             reply_markup=InlineKeyboardMarkup(out),
         )
