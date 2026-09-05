@@ -15,14 +15,17 @@ from SHUKLAMUSIC.utils.inline import supp_markup
 @language
 async def ping_com(client, message: Message, _):
     start = datetime.now()
-    response = await message.reply_photo(
-        photo=PING_IMG_URL,
-        caption=_["ping_1"].format(app.mention),
-    )
+    response = await message.reply_text(_["ping_1"].format(app.mention))
+    
     pytgping = await SHUKLA.ping()
     UP, CPU, RAM, DISK = await bot_sys_stats()
     resp = (datetime.now() - start).microseconds / 1000
-    await response.edit_text(
-        _["ping_2"].format(resp, app.mention, UP, RAM, CPU, DISK, pytgping),
+    
+    await response.delete()
+    
+    await message.reply_video(
+        video=PING_IMG_URL,
+        caption=_["ping_2"].format(resp, app.mention, UP, RAM, CPU, DISK, pytgping),
         reply_markup=supp_markup(_),
     )
+ 
